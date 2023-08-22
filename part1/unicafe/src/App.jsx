@@ -3,16 +3,23 @@ const Statistics = ({ good, neutral, bad }) => {
   const all = good + neutral + bad;
   const average = (good - bad) / all;
   const positive = good / all;
+  const ifFeedbackGiven = !(good === 0 && neutral === 0 && bad === 0);
 
   return (
     <>
       <h1>statistics</h1>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {all}</p>
-      <p>average {average}</p>
-      <p>positive {`${positive * 100}%`}</p>
+      {ifFeedbackGiven ? (
+        <>
+          <p>good {good}</p>
+          <p>neutral {neutral}</p>
+          <p>bad {bad}</p>
+          <p>all {all}</p>
+          <p>average {average}</p>
+          <p>positive {`${positive * 100}%`}</p>
+        </>
+      ) : (
+        <p>No feedback given</p>
+      )}
     </>
   );
 };
