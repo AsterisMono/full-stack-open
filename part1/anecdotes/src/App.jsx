@@ -4,6 +4,15 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
+const Anecdote = ({ text, points }) => {
+  return (
+    <>
+      <div>{text}</div>
+      <p>has {points} votes</p>
+    </>
+  );
+};
+
 const App = () => {
   const anecdotes = [
     "If it hurts, do it more often.",
@@ -16,17 +25,34 @@ const App = () => {
     "The only way to go fast, is to go well.",
   ];
 
+  // eslint-disable-next-line no-unused-vars
+  const [points, setPoints] = useState(Array(anecdotes.length).fill(0));
+
   const getRandomAnecdote = () => {
     const randomIndex = getRandomInt(anecdotes.length);
     setSelected(randomIndex);
   };
 
+  const voteForSelected = () => {
+    const newPoints = [...points];
+    newPoints[selected] += 1;
+    setPoints(newPoints);
+  };
+
   const [selected, setSelected] = useState(0);
+  const anecdoteIndexWithMostVotes = points.indexOf(Math.max(...points));
 
   return (
     <>
-      <div>{anecdotes[selected]}</div>
+      <h1>Anecdote of the day</h1>
+      <Anecdote text={anecdotes[selected]} points={points[selected]} />
+      <button onClick={voteForSelected}>vote</button>
       <button onClick={getRandomAnecdote}>random anecdote</button>
+      <h1>Anecdote with most votes</h1>
+      <Anecdote
+        text={anecdotes[anecdoteIndexWithMostVotes]}
+        points={points[anecdoteIndexWithMostVotes]}
+      />
     </>
   );
 };
