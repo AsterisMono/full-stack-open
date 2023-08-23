@@ -36,15 +36,22 @@ const PersonForm = ({
     </div>
   </form>
 );
-const Person = ({ person }) => {
+const Person = ({ person, deletePerson }) => {
   return (
     <p>
-      {person.name} {person.number}
+      {person.name} {person.number}{" "}
+      <button onClick={deletePerson}>delete</button>
     </p>
   );
 };
-const Persons = ({ persons }) => {
-  return persons.map((person) => <Person person={person} key={person.id} />);
+const Persons = ({ persons, onPersonDelete }) => {
+  return persons.map((person) => (
+    <Person
+      person={person}
+      key={person.id}
+      deletePerson={() => onPersonDelete(person)}
+    />
+  ));
 };
 
 const App = () => {
@@ -80,6 +87,20 @@ const App = () => {
     });
   };
 
+  const onPersonDelete = (deletedPerson) => {
+    const choice = confirm(`Delete ${deletedPerson.name}?`);
+    if (choice) {
+      personService
+        .deletePerson(deletedPerson.id)
+        .catch(() => {
+          alert(`the person ${deletedPerson.name} is already deleted`);
+        })
+        .finally(() => {
+          setPersons(persons.filter((person) => person.id != deletedPerson.id));
+        });
+    }
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -93,7 +114,7 @@ const App = () => {
         onNewNameSubmit={onNewNameSubmit}
       />
       <h3>Numbers</h3>
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} onPersonDelete={onPersonDelete} />
     </div>
   );
 };
