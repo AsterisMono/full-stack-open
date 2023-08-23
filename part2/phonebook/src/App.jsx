@@ -1,6 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
 import { useEffect } from "react";
+import personService from "./services/persons";
 const onInputChange = (e, setTarget) => {
   setTarget(e.target.value);
 };
@@ -54,9 +54,7 @@ const App = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((res) => {
-      setPersons(res.data);
-    });
+    personService.getAll().then((persons) => setPersons(persons));
   }, []);
 
   const filteredPersons =
@@ -76,8 +74,8 @@ const App = () => {
       name: newName,
       number: newNumber,
     };
-    axios.post("http://localhost:3001/persons", newPerson).then((res) => {
-      setPersons([...persons, res.data]);
+    personService.newPerson(newPerson).then((createdPerson) => {
+      setPersons([...persons, createdPerson]);
       setNewName("");
     });
   };
