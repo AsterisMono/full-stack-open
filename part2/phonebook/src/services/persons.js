@@ -9,4 +9,9 @@ const newPerson = (newObject) =>
 const deletePerson = (personId) =>
   axios.delete(`${endpoint}/${personId}`).then((res) => res.data);
 
-export default { getAll, newPerson, deletePerson };
+const editPerson = (editedPerson) =>
+  axios
+    .put(`${endpoint}/${editedPerson.id}`, editedPerson)
+    .then((res) => res.data);
+
+export default { getAll, newPerson, deletePerson, editPerson };

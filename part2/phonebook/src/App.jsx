@@ -74,7 +74,21 @@ const App = () => {
   const onNewNameSubmit = (e) => {
     e.preventDefault();
     if (persons.map((p) => p.name).includes(newName)) {
-      alert(`${newName} is already added to phonebook`);
+      const choice = confirm(
+        `${newName} is already added to phonebook, replace the old number with a new one?`
+      );
+      if (choice) {
+        personService
+          .editPerson({
+            ...persons.find((person) => person.name === newName),
+            number: newNumber,
+          })
+          .then((editedPerson) =>
+            setPersons(
+              persons.map((p) => (p.id !== editedPerson.id ? p : editedPerson))
+            )
+          );
+      }
       return;
     }
     const newPerson = {
@@ -84,6 +98,7 @@ const App = () => {
     personService.newPerson(newPerson).then((createdPerson) => {
       setPersons([...persons, createdPerson]);
       setNewName("");
+      setNewNumber("");
     });
   };
 
